@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Modelo.Autenticacao.DTOs.Response;
 
-namespace Modelo.Autenticacao.DTOs.Response
+public record UsuarioCadastroResponse
 {
-    internal class UsuarioCadastroResponse
+    public UsuarioCadastroResponse(bool sucesso, IEnumerable<string> erros)
     {
+        Sucesso = sucesso;
+        Erros = erros;
     }
+
+    public bool Sucesso { get; set; }
+
+    public IEnumerable<string> Erros { get; set; }
 }

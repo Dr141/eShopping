@@ -18,4 +18,8 @@
     <Folder Include="Servicos\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Modelo.Autenticacao\Modelo.Autenticacao.csproj" />
+  </ItemGroup>
+
 </Project>
