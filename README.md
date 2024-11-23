@@ -5,6 +5,7 @@
 1. Realizar autenticação devemos chamar o método: `Login(UsuarioLoginRequest usuario)`
 2. Cadastrar novo usuário devemos chamar o método:`Cadastrar(UsuarioCadastroRequest cadastro)`
 3. Atualizar senha: `AtualizarSenha(UsuarioAtualizarSenhaResquest atualizarSenha)`
+4. Atualizar token expirado `AtualizarToken()`
 
 ### Método para controle de usuário(necessário `Role("Administrador")`)
 1. Obter todos usuários: `ObterTodos()`
