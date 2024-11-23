@@ -169,9 +169,9 @@ public class IdentityService : IIdentityService
     /// A <see cref="Task"/> é uma operação assíncrona que retorna um <see cref="UsuarioCadastroResponse"/>
     /// ao final da operação.
     /// </returns>
-    public async Task<UsuarioCadastroResponse> AtualizarSenha(UsuarioAtualizarSenhaResquest usuarioLoginAtualizarSenha)
+    public async Task<UsuarioCadastroResponse> AtualizarSenha(UsuarioAtualizarSenhaResquest usuarioLoginAtualizarSenha, string email)
     {
-        var user = await _userManager.FindByEmailAsync(usuarioLoginAtualizarSenha.Email);
+        var user = await _userManager.FindByEmailAsync(email);
 
         if (user is IdentityUser)
         {
@@ -181,7 +181,7 @@ public class IdentityService : IIdentityService
             return usuarioResponse;
         }
 
-        return new UsuarioCadastroResponse(false, new List<string> { $"Usuário com e-mail {usuarioLoginAtualizarSenha.Email}, não foi encontrado." }); 
+        return new UsuarioCadastroResponse(false, new List<string> { $"Usuário com e-mail {email}, não foi encontrado." }); 
     }
 
     /// <summary>
@@ -260,6 +260,27 @@ public class IdentityService : IIdentityService
         }
 
         return new UsuarioLoginResponse(result.Succeeded, string.Empty, string.Empty, errors);
+    }
+
+    /// <summary>
+    /// Método para renovar token.
+    /// </summary>
+    /// <param name="usuarioId">Fornecer uma <see cref="string"/> com o ID do cliente</param>
+    /// <returns>
+    /// A <see cref="Task"/> é uma operação assíncrona que retorna um <see cref="UsuarioLoginResponse"/>
+    /// ao final da operação.
+    /// </returns>
+    public async Task<UsuarioLoginResponse> LoginSemSenha(string usuarioId)
+    {
+        var usuario = await _userManager.FindByIdAsync(usuarioId);
+
+        List<string> errors = new List<string>();        
+        if (await _userManager.IsLockedOutAsync(usuario))
+            errors.Add("Essa conta está bloqueada");
+        else if (!await _userManager.IsEmailConfirmedAsync(usuario))
+            errors.Add("Essa conta precisa confirmar seu e-mail antes de realizar o login");
+
+        return errors.Count == 0 ? await GerarCredenciais(usuario.Email) : new UsuarioLoginResponse(false, string.Empty, string.Empty, errors);
     }
 
     /// <summary>

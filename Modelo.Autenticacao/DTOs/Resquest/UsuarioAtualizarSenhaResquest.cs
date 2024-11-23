@@ -5,10 +5,6 @@ namespace Modelo.Autenticacao.DTOs.Resquest;
 public record UsuarioAtualizarSenhaResquest
 {
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [EmailAddress(ErrorMessage = "O campo {0} é inválido")]
-    public string Email { get; set; }
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public string SenhaAtual { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -18,9 +14,8 @@ public record UsuarioAtualizarSenhaResquest
     [Compare(nameof(NovaSenha), ErrorMessage = "As senhas devem ser iguais")]
     public string SenhaConfirmacao { get; set; }
 
-    public UsuarioAtualizarSenhaResquest(string email, string senhaAtual, string novaSenha, string senhaConfirmacao)
+    public UsuarioAtualizarSenhaResquest(string senhaAtual, string novaSenha, string senhaConfirmacao)
     {
-        Email = email;
         SenhaAtual = senhaAtual;
         NovaSenha = novaSenha;
         SenhaConfirmacao = senhaConfirmacao;
