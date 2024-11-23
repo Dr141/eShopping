@@ -1,5 +1,7 @@
 ﻿using Modelo.Autenticacao.Enumerados;
+using Newtonsoft.Json.Converters;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Modelo.Autenticacao.DTOs.Resquest;
 
@@ -10,12 +12,12 @@ public class UsuarioClaimRequest
     public string Email { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    public ClaimType ClaimType { get; set; }
+    public ClaimTypes ClaimType { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    public ClaimValue ClaimValue { get; set; }
+    public ClaimValues ClaimValue { get; set; }
 
-    public UsuarioClaimRequest(string email, ClaimType claimType, ClaimValue claimValue)
+    public UsuarioClaimRequest(string email, ClaimTypes claimType, ClaimValues claimValue)
     {
         Email = email;
         ClaimValue = claimValue;

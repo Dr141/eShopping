@@ -1,7 +1,6 @@
 ﻿namespace Modelo.Autenticacao.Enumerados;
 
-public enum ClaimType
+public enum Policies
 {
-    Categoria,
-    Produto
+    HorarioComercial
 }

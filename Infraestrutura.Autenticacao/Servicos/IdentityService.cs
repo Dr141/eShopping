@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Modelo.Autenticacao.Configuracao;
 using Modelo.Autenticacao.DTOs.Response;
 using Modelo.Autenticacao.DTOs.Resquest;
@@ -28,11 +29,11 @@ public class IdentityService : IIdentityService
     /// <param name="signInManager">Aguarda um objeto <see cref="SignInManager"/> do tipo <see cref="IdentityUser"/></param>
     /// <param name="userManager">Aguarda um objeto <see cref="UserManager"/> do tipo <see cref="IdentityUser"/></param>
     /// <param name="jwtOptions">Aguarda um objeto <see cref="IOptions"/> do tipo <see cref="JwtOptions"/></param>
-    public IdentityService(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, JwtOptions jwtOptions, RoleManager<IdentityRole> roleManager)
+    public IdentityService(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, IOptions<JwtOptions> jwtOptions, RoleManager<IdentityRole> roleManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
-        _jwtOptions = jwtOptions;
+        _jwtOptions = jwtOptions.Value;
         _roleManager = roleManager;
     }
 
@@ -291,9 +292,9 @@ public class IdentityService : IIdentityService
             issuer: _jwtOptions.Issuer,
             audience: _jwtOptions.Audience,
             claims: claims,
-            notBefore: DateTime.Now,
             expires: dataExpiracao,
-            signingCredentials: _jwtOptions.SigningCredentials);
+            signingCredentials: _jwtOptions.SigningCredentials
+        );
 
         return new JwtSecurityTokenHandler().WriteToken(jwt);
     }
@@ -314,8 +315,8 @@ public class IdentityService : IIdentityService
             new Claim(JwtRegisteredClaimNames.Email, user.Email),
             new Claim(JwtRegisteredClaimNames.Sub, user.Id),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Nbf, DateTime.Now.ToString()),
-            new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())
+            new Claim(JwtRegisteredClaimNames.Nbf, ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds().ToString()),
+            new Claim(JwtRegisteredClaimNames.Iat, ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds().ToString())
         };
 
         if (adicionarClaimsUsuario)
@@ -326,7 +327,7 @@ public class IdentityService : IIdentityService
             claims.AddRange(userClaims);
 
             foreach (var role in roles)
-                claims.Add(new Claim("claim", role));
+                claims.Add(new Claim("role", role));
         }
 
         return claims;
@@ -346,8 +347,8 @@ public class IdentityService : IIdentityService
         var accessTokenClaims = await ObterClaims(user, adicionarClaimsUsuario: true);
         var refreshTokenClaims = await ObterClaims(user, adicionarClaimsUsuario: false);
 
-        var dataExpiracaoAccessToken = DateTime.Now.AddSeconds(_jwtOptions.AccessTokenExpiration);
-        var dataExpiracaoRefreshToken = DateTime.Now.AddSeconds(_jwtOptions.RefreshTokenExpiration);
+        var dataExpiracaoAccessToken = DateTime.Now.AddMinutes(_jwtOptions.AccessTokenExpiration);
+        var dataExpiracaoRefreshToken = DateTime.Now.AddMinutes(_jwtOptions.RefreshTokenExpiration);
 
         var accessToken = GerarToken(accessTokenClaims, dataExpiracaoAccessToken);
         var refreshToken = GerarToken(refreshTokenClaims, dataExpiracaoRefreshToken);
