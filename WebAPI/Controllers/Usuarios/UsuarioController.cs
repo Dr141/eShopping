@@ -19,6 +19,8 @@ public class UsuarioController : ControllerBase
 
     public UsuarioController(IIdentityService identity) => _identity = identity;
 
+    [EndpointSummary("ObterTodos")]
+    [EndpointDescription("Método para obter todos usuários cadastrados.")]
     [ProducesResponseType(typeof(UsuariosResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -30,6 +32,8 @@ public class UsuarioController : ControllerBase
         return Ok(result);
     }
 
+    [EndpointSummary("AtualizarSenha")]
+    [EndpointDescription("Método para atualizar a senha de terceiros.")]
     [ProducesResponseType(typeof(UsuarioCadastroResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -54,6 +58,8 @@ public class UsuarioController : ControllerBase
         catch (Exception ex) { return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); }
     }
 
+    [EndpointSummary("AdicionarRole")]
+    [EndpointDescription("Método para adicionar role.")]
     [ProducesResponseType(typeof(UsuarioCadastroResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -78,6 +84,8 @@ public class UsuarioController : ControllerBase
         catch (Exception ex) { return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); }
     }
 
+    [EndpointSummary("AdicionarRole")]
+    [EndpointDescription("Método para remover role.")]
     [ProducesResponseType(typeof(UsuarioCadastroResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -102,6 +110,8 @@ public class UsuarioController : ControllerBase
         catch (Exception ex) { return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); }
     }
 
+    [EndpointSummary("AdicionarClaim")]
+    [EndpointDescription("Método para adicionar claim.")]
     [ProducesResponseType(typeof(UsuarioCadastroResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -126,6 +136,8 @@ public class UsuarioController : ControllerBase
         catch (Exception ex) { return StatusCode(StatusCodes.Status500InternalServerError, ex.Message); }
     }
 
+    [EndpointSummary("RemoverClaim")]
+    [EndpointDescription("Método para remover claim.")]
     [ProducesResponseType(typeof(UsuarioCadastroResponse), 200)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
